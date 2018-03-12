@@ -33,7 +33,7 @@ source_markup_btn1 = types.KeyboardButton('18')
 source_markup_btn2 = types.KeyboardButton('19')
 source_markup.add(source_markup_btn1, source_markup_btn2)
 
-hide_markup = types.ReplyKeyboardMarkup(hide_keyboard=True)
+hide_markup = types.ReplyKeyboardRemove(selective=False)
 
 
 @bot.message_handler(commands=['age'])
