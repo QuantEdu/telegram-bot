@@ -33,6 +33,8 @@ source_markup_btn1 = types.KeyboardButton('18')
 source_markup_btn2 = types.KeyboardButton('19')
 source_markup.add(source_markup_btn1, source_markup_btn2)
 
+hide_markup = types.ReplyKeyboardMarkup(hide_keyboard=True)
+
 
 @bot.message_handler(commands=['age'])
 def age_handler(message):
@@ -50,7 +52,7 @@ def ask_age(message):
         msg = bot.send_message(chat_id, 'Возраст должен быть числом, введите ещё раз.')
         bot.register_next_step_handler(msg, ask_age)
         return
-    bot.send_message(chat_id, 'Спасибо, я запомнил что вам ' + text + ' лет.')
+    bot.send_message(chat_id, 'Спасибо, я запомнил что вам ' + text + ' лет.', reply_markup=hide_markup)
     task.is_running = False
 
 
