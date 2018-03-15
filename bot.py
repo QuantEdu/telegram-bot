@@ -27,20 +27,15 @@ def photo_handler(message):
     bot.send_message(chat_id, 'Красиво.')
 
 
-# клавиатурная разметка для ответа
-source_markup = types.ReplyKeyboardMarkup(row_width=2, resize_keyboard=True)
-source_markup_btn1 = types.KeyboardButton('18')
-source_markup_btn2 = types.KeyboardButton('19')
-source_markup.add(source_markup_btn1, source_markup_btn2)
-
-hide_markup = types.ReplyKeyboardRemove(selective=False)
-
-
 @bot.message_handler(commands=['age'])
 def age_handler(message):
     if not task.is_running:
         chat_id = message.chat.id
-        msg = bot.send_message(chat_id, 'Сколько вам лет?', reply_markup=source_markup)
+
+        markup = types.ReplyKeyboardMarkup(one_time_keyboard=True)
+        markup.add('18', '19')
+
+        msg = bot.send_message(chat_id, 'Сколько вам лет?', reply_markup=markup)
         bot.register_next_step_handler(msg, ask_age)
         task.is_running = True
 
@@ -52,9 +47,16 @@ def ask_age(message):
         msg = bot.send_message(chat_id, 'Возраст должен быть числом, введите ещё раз.')
         bot.register_next_step_handler(msg, ask_age)
         return
-    bot.send_message(chat_id, 'Спасибо, я запомнил что вам ' + text + ' лет.', reply_markup=hide_markup)
+
+    markup = types.ReplyKeyboardRemove(selective=False)
+    bot.send_message(chat_id, 'Спасибо, я запомнил что вам ' + text + ' лет.', reply_markup=markup)
     task.is_running = False
 
 
+@bot.message_handler(func=lambda message: True)
+def echo_all(message):
+    bot.reply_to(message, message.text)
+
+
 # бот находится в режиме ожидания ответа
-bot.polling()
+bot.polling(none_stop=True)
